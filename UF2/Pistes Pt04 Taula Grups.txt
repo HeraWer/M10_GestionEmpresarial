@@ -1,0 +1,34 @@
+OBJECT Table 50001 Grups
+{
+  OBJECT-PROPERTIES
+  {
+    Date=14/02/20;
+    Time=11:44:12;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+  }
+  FIELDS
+  {
+    { 1   ;   ;Codi_Grup           ;Integer       ;Description=Codi del grup }
+    { 2   ;   ;Nom_Grup            ;Text30        ;Description=Nom del grup }
+    { 3   ;No ;Codi_Aula           ;Integer       ;TableRelation=Aules.Codi_Aula;
+                                                   Description=Codi de l'aula }
+  }
+  KEYS
+  {
+    {    ;Codi_Grup                               ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

@@ -1,0 +1,32 @@
+OBJECT Table 50000 Aules
+{
+  OBJECT-PROPERTIES
+  {
+    Date=14/02/20;
+    Time=11:27:22;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+  }
+  FIELDS
+  {
+    { 1   ;   ;Codi_Aula           ;Integer       ;Description=Codi de l'aula }
+    { 2   ;   ;Nom_Aula            ;Text30        ;Description=Nom de l'aula }
+  }
+  KEYS
+  {
+    {    ;Codi_Aula                               ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

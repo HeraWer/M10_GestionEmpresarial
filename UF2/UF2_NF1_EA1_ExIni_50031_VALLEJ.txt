@@ -1,0 +1,53 @@
+OBJECT Codeunit 50031 Exercici1
+{
+  OBJECT-PROPERTIES
+  {
+    Date=13/01/20;
+    Time=17:22:36;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+            // Exercici 1
+            MESSAGE('Suma de la progressi¢ aritmätica 2, 5, 8, 11,... fins a n=20');
+            VariableInt1 := 2;
+            VariableInt2 := 2;
+            FOR N :=1 TO 19 DO
+              BEGIN
+              MESSAGE('Valor de n ' + FORMAT(N) + ' ValorNumSerie ' + FORMAT(VariableInt1) + ' \La suma del "n" primers nombres de la särie Çs ResultatSumaParcial ' + FORMAT(VariableInt2));
+              VariableInt1 := VariableInt1 + 3;
+              VariableInt2 := VariableInt2 + VariableInt1;
+              IF N = 10 THEN BEGIN
+                MESSAGE('Estem a la meitat de n£meros sumats');
+                END;
+              END;
+              MESSAGE('Valor de n ' + FORMAT(N + 1) + ' ValorNumSerie ' + FORMAT(VariableInt1) + ' \La suma del "n" primers nombres de la särie Çs ResultatSumaParcial ' + FORMAT(VariableInt2));
+              MESSAGE('ResultatFinal ' + FORMAT(VariableInt2));
+
+            IF VariableInt2 < 100 THEN BEGIN
+              MESSAGE('El valor total Çs inferior a 100, concretament ' + FORMAT(VariableInt2));
+              END
+              ELSE IF ((VariableInt2 >= 100) AND (VariableInt2 < 500)) THEN BEGIN
+                MESSAGE('El valor total Çs inferior a 500, concretament ' + FORMAT(VariableInt2));
+                END
+              ELSE BEGIN
+                MESSAGE('El valor total Çs superior o igual a 500, concretament  ' + FORMAT(VariableInt2));
+            END;
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      N@1106000000 : Integer;
+      VariableInt1@1106000001 : Integer;
+      VariableInt2@1106000002 : Integer;
+      VariableText1@1106000003 : Text;
+
+    BEGIN
+    END.
+  }
+}
+

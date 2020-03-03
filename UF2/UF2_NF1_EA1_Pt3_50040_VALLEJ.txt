@@ -1,0 +1,266 @@
+OBJECT Codeunit 50040 Pt3_VALLEJ
+{
+  OBJECT-PROPERTIES
+  {
+    Date=02/02/20;
+    Time=22:20:16;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    OnRun=VAR
+            CR@1106000000 : Char;
+            LF@1106000001 : Char;
+            numAccion@1106000002 : Integer;
+          BEGIN
+            // PARA SALTOS DE LINEA
+            CR := 13; // SALTO DE LINEA - (Hex $0D)
+            LF := 10; // SALTO DE LINEA - (Hex $0A)
+            ImprimirMenu();
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      wind@1106000000 : DotNet "'Microsoft.VisualBasic, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.Microsoft.VisualBasic.Interaction" RUNONCLIENT;
+      CR@1106000001 : Char;
+      LF@1106000002 : Char;
+
+    LOCAL PROCEDURE ImprimirMenu@1106000000();
+    VAR
+      opc@1106000000 : Integer;
+    BEGIN
+      CR := 13; // SALTO DE LINEA - (Hex $0D)
+      LF := 10; // SALTO DE LINEA - (Hex $0A)
+      EVALUATE(opc, wind.InputBox('Introduce la opcion:'+ FORMAT(CR)+FORMAT(LF)+
+      '1 - Cambio base'+ FORMAT(CR)+FORMAT(LF)+
+      '2 - Factorial'+ FORMAT(CR)+FORMAT(LF)+
+      '3 - Calcular posici¢n de Fibonacci'+ FORMAT(CR)+FORMAT(LF)+
+      '4 - Comprueba n£meros primos'+ FORMAT(CR)+FORMAT(LF)+
+      '5 - Jugar a master mind', 'Introduce un n£mero:', '', 100, 100));
+      Opciones(opc);
+
+      // PARA ELEGIR OPCIONES DE LOS DIFERENTES EJERCICIOS
+    END;
+
+    LOCAL PROCEDURE Opciones@1106000001(opc@1106000000 : Integer);
+    VAR
+      numAccion@1106000001 : Integer;
+    BEGIN
+      CASE opc OF
+        1:
+          BEGIN
+            EVALUATE(numAccion, wind.InputBox('Introdueix el numero a cambiar de base:', 'Introdueix un n£mero:', '', 100, 100));
+            CambioDeBase(numAccion);
+          END;
+        2:
+          BEGIN
+            EVALUATE(numAccion, wind.InputBox('Introdueix el numero a calcular el factorial:', 'Introdueix un n£mero:', '', 100, 100));
+            wind.MsgBox('Factorial de '+FORMAT(numAccion)+': '+FORMAT(CalcFactorial(numAccion)), 0, 'Factorial de ' + FORMAT(numAccion));
+          END;
+        3:
+          BEGIN
+            EVALUATE(numAccion, wind.InputBox('Introduce el numero y te dire el valor de esa posicion en Fibonacci:', 'Serie fibonacci', '', 100, 100));
+            wind.MsgBox('La posici¢n '+FORMAT(numAccion)+' en fibonacci es '+FORMAT(CalculaFibonacci(numAccion)), 0, 'Fibonacci');
+          END;
+        4:
+          BEGIN
+            EVALUATE(numAccion, wind.InputBox('Introduce el numero a comprobar:', 'Numero:', '', 100, 100));
+            IF EsPrimo(numAccion) THEN
+              wind.MsgBox('El n£mero '+FORMAT(numAccion)+' es primo.', 0, 'Es primo')
+            ELSE
+              wind.MsgBox('El n£mero '+FORMAT(numAccion)+' no es primo.', 0, 'No es primo');
+          END;
+        5:
+          BEGIN
+            EVALUATE(numAccion, wind.InputBox('Introduce combinacion:', 'Introduce', '', 100, 100));
+            IF NOT(juegoMasterMind(numAccion)) THEN
+              wind.MsgBox('Has perdido... La combinaci¢n era ' + FORMAT(numAccion) + '.', 0, 'Perdiste :(');
+          END;
+        ELSE
+          wind.MsgBox('Escoge una opcion de las que hay!', 0, 'ERROR!');
+      END;
+
+      // PARA CALCULAR EL CAMBIO DE BASE
+    END;
+
+    LOCAL PROCEDURE CambioDeBase@1106000002(Num@1106000000 : Integer);
+    VAR
+      numAuxiliar@1106000001 : Integer;
+      Resto@1106000002 : Integer;
+      StringNumero@1106000003 : Text;
+    BEGIN
+      numAuxiliar := Num;
+      REPEAT
+        Resto := Num MOD 2;
+        StringNumero := FORMAT(Resto) + StringNumero;
+        Num := Num DIV 2;
+      UNTIL Num = 0;
+      wind.MsgBox('El n£mero ' + FORMAT(numAuxiliar) + ' en binario: ' + StringNumero, 0, 'Binario');
+      Num := numAuxiliar;
+      StringNumero := '';
+      REPEAT
+        Resto := Num MOD 8;
+        StringNumero := FORMAT(Resto) + StringNumero;
+        Num := Num DIV 8;
+      UNTIL Num = 0;
+
+      wind.MsgBox('El n£mero ' + FORMAT(numAuxiliar) + ' en octal: ' + StringNumero, 0, 'Octal');
+      StringNumero := '';
+      Num := numAuxiliar;
+
+      REPEAT
+        Resto := Num MOD 16;
+        CASE Resto OF
+        10:
+          BEGIN
+            StringNumero := 'a' + StringNumero;
+          END;
+        11:
+          BEGIN
+            StringNumero := 'b' + StringNumero;
+          END;
+        12:
+          BEGIN
+            StringNumero := 'c' + StringNumero;
+          END;
+        13:
+          BEGIN
+            StringNumero := 'd' + StringNumero;
+          END;
+        14:
+          BEGIN
+            StringNumero := 'e' + StringNumero;
+          END;
+        15:
+          BEGIN
+            StringNumero := 'f' + StringNumero;
+          END;
+        ELSE
+          BEGIN
+            StringNumero := FORMAT(Resto) + StringNumero;
+          END;
+      END;
+        Num := Num DIV 16;
+      UNTIL Num = 0;
+
+      wind.MsgBox('El n£mero ' + FORMAT(Num) + ' en hexadecimal: ' + StringNumero, 0, 'Hexadecimal');
+
+      // PARA CALCULAR EL FACTORIAL
+    END;
+
+    LOCAL PROCEDURE CalcFactorial@1106000003(Num@1106000000 : Integer) Resultado : Integer;
+    VAR
+      I@1106000001 : Integer;
+    BEGIN
+      Resultado := 1;
+      IF Num = 0 THEN
+        Resultado := 1
+      ELSE
+          FOR I := 1 TO Num DO
+            Resultado := Resultado * I;
+    END;
+
+    LOCAL PROCEDURE CalculaFibonacci@1106000004(Posicion@1106000000 : Integer) numeroPosicion : Integer;
+    VAR
+      posicion0@1106000001 : Integer;
+      posicion1@1106000002 : Integer;
+      I@1106000003 : Integer;
+    BEGIN
+      FOR I := 0 TO Posicion DO
+        BEGIN
+        IF I = 0 THEN
+          posicion0 := 0
+        ELSE IF I = 1 THEN
+          posicion1 := 1
+        ELSE
+          BEGIN
+            numeroPosicion := posicion0 + posicion1;
+            posicion0 := posicion1;
+            posicion1 := numeroPosicion;
+          END;
+        END;
+
+      // PARA CALCULAR SI ES PRIMO O NO
+    END;
+
+    LOCAL PROCEDURE EsPrimo@1106000005(Num@1106000000 : Integer) esPrimo : Boolean;
+    VAR
+      Contador@1106000001 : Integer;
+      I@1106000002 : Integer;
+    BEGIN
+      Contador := 0;
+      esPrimo := TRUE;
+
+      FOR I := 1 TO Num DO
+        IF (Num MOD I) = 0 THEN
+          Contador += 1;
+
+      IF Contador > 2 THEN
+        esPrimo:=FALSE;
+
+      // JUEGO DEL MASTERMIND
+    END;
+
+    LOCAL PROCEDURE juegoMasterMind@1106000006(Numero@1106000000 : Integer) Ganado : Boolean;
+    VAR
+      AuxiliarNumero@1106000001 : Integer;
+      I@1106000002 : Integer;
+      J@1106000003 : Integer;
+      ArrayGanador@1106000004 : ARRAY [4] OF Integer;
+      NumeroJugador@1106000005 : Integer;
+      ArrayJugador@1106000006 : ARRAY [4] OF Integer;
+      Wounded@1106000007 : Integer;
+      Dead@1106000008 : Integer;
+    BEGIN
+      AuxiliarNumero := Numero;
+      FOR I := 1 TO 4 DO
+        BEGIN
+          ArrayGanador[I] := Numero MOD 10;
+          Numero := Numero DIV 10;
+        END;
+      I := 0;
+      REPEAT
+        BEGIN
+          I += 1;
+          EVALUATE(NumeroJugador, wind.InputBox('Introduce la combinaci¢n que creas: ', 'Introduce combinaci¢n:', '', 100, 100));
+          FOR J := 1 TO 4 DO
+            BEGIN
+              ArrayJugador[J] := NumeroJugador MOD 10;
+              NumeroJugador := NumeroJugador DIV 10;
+            END;
+          FOR I := 1 TO 4 DO
+          BEGIN
+          IF ArrayGanador[I] = ArrayJugador[I] THEN
+            Dead += 1
+          ELSE
+            BEGIN
+              FOR J := 1 TO 4 DO
+                IF (ArrayGanador[I] = ArrayJugador[J]) THEN
+                  BEGIN
+                    Wounded += 1;
+                    J := 4;
+                  END;
+            END;
+        END;
+      IF Dead = 4 THEN
+        BEGIN
+          wind.MsgBox('Has ganado, la combinaci¢n era ' + FORMAT(AuxiliarNumero), 0, 'Ganaste');
+          Ganado := TRUE;
+        END
+      ELSE
+        BEGIN
+          wind.MsgBox('Has perdido, n£meros en su posici¢n correcta: ' + FORMAT(Dead) + ', n£meros en la combinaci¢n pero fuera de posici¢n: '+FORMAT(Wounded), 0, 'Combinacion no acertada');
+          Ganado := FALSE;
+        END;
+        END;
+      UNTIL (I = 8) OR (Ganado = TRUE);
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

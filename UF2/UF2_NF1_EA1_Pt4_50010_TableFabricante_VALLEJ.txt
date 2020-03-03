@@ -1,0 +1,32 @@
+OBJECT Table 50010 FABRICANTES
+{
+  OBJECT-PROPERTIES
+  {
+    Date=17/02/20;
+    Time=16:29:42;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+  }
+  FIELDS
+  {
+    { 1   ;   ;CLAVE_FABRICANTE    ;Integer        }
+    { 2   ;   ;NOMBRE              ;Text100        }
+  }
+  KEYS
+  {
+    {    ;CLAVE_FABRICANTE                        ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

@@ -1,0 +1,171 @@
+OBJECT Codeunit 50045 Pistes taules Pt04
+{
+  OBJECT-PROPERTIES
+  {
+    Date=17/02/20;
+    Time=12:19:57;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+            //Anem a mostrar un di…leg amb dades
+
+            TextMostrar := 'Di…leg1 - Mostrar\Codi Aula #1######\' + 'Descripci¢ nom Aula #2######';
+
+            NumCodiAula := 2;
+            NomNomAula := 'Aula 2';
+
+            MeuDialeg.OPEN(TextMostrar); // Obre una finestra amv '#'-camps.
+            SLEEP(5000);
+            MeuDialeg.UPDATE(1, NumCodiAula); // Omplir el camp1
+            SLEEP(5000);
+            MeuDialeg.UPDATE(2, NomNomAula); // Omplir el camp2.
+            SLEEP(5000);
+            MeuDialeg.CLOSE;
+
+            //Anem a insertar registres a la taula 50000 Aules
+
+            TextMostrar := 'Di…leg2 - INSERT\Codi Aula #1######\' + 'Descripci¢ nom Aula #2######';
+
+            NumCodiAula := 0;
+            NomNomAula := ' ';
+
+            MeuDialeg.OPEN(TextMostrar); // Obre una finestra amb '#'-camps.
+            // Insertem el primer registre
+            SLEEP(5000);
+            RegistreAula.DELETEALL;
+            RegistreAula.Codi_Aula := 2;
+            RegistreAula.Nom_Aula := 'Aula 2';
+            NumCodiAula := RegistreAula.Codi_Aula;
+            NomNomAula := RegistreAula.Nom_Aula;
+            MeuDialeg.UPDATE(1, NumCodiAula); // Omplir el camp1
+            MeuDialeg.UPDATE(2, NomNomAula); // Omplir el camp2.
+            SLEEP(5000);
+            RegistreAula.INSERT;
+            RegistreAula.INIT;
+            // Insertem el segon registre
+            SLEEP(5000);
+            RegistreAula.Codi_Aula := 3;
+            RegistreAula.Nom_Aula := 'Aula 3';
+            NumCodiAula := RegistreAula.Codi_Aula;
+            NomNomAula := RegistreAula.Nom_Aula;
+            MeuDialeg.UPDATE(1, NumCodiAula); // Omplir el camp1
+            MeuDialeg.UPDATE(2, NomNomAula); // Omplir el camp2.
+            SLEEP(5000);
+            RegistreAula.INSERT;
+            RegistreAula.INIT;
+
+            MeuDialeg.CLOSE;
+
+            //Mostrem els registres de la taula 50000 Aules
+            MeuDialeg.OPEN('Di…leg3 - FIND\Codi Aula: #1######\Nom Aula: #2######');
+            WITH RegistreAula DO BEGIN
+              IF FIND('-') THEN
+                REPEAT
+                  MeuDialeg.UPDATE(1,Codi_Aula);
+                  MeuDialeg.UPDATE(2,Nom_Aula);
+                  SLEEP(5000);
+                UNTIL NEXT = 0;
+            END;
+
+            MeuDialeg.CLOSE;
+
+            //Anem a insertar registres a la taula 50001 Grups
+            // 1 TIM1A 2
+            // 2 TIM4 2
+            // 3 TIM6 3
+
+            MeuDialeg.OPEN('Di…leg4 - INSERT GRUP\Codi Grup #1######\Descripci¢ nom Grup #2######\Codi Aula #3######'); // Obre una finestra amb '#'-camps.
+            // Insertem el primer registre
+            SLEEP(5000);
+            RegistreGrup.DELETEALL;
+            RegistreGrup.INIT;
+            RegistreGrup.Codi_Grup := 1;
+            RegistreGrup.Nom_Grup := 'TIM1A';
+            RegistreGrup.Codi_Aula := 2;
+            MeuDialeg.UPDATE(1, RegistreGrup.Codi_Grup); // Omplir el camp1
+            MeuDialeg.UPDATE(2, RegistreGrup.Nom_Grup); // Omplir el camp2.
+            MeuDialeg.UPDATE(3, RegistreGrup.Codi_Aula); // Omplir el camp3.
+            SLEEP(5000);
+            RegistreGrup.INSERT;
+            // Insertem el segon registre
+            SLEEP(5000);
+            RegistreGrup.INIT;
+            RegistreGrup.Codi_Grup := 2;
+            RegistreGrup.Nom_Grup := 'TIM4';
+            RegistreGrup.Codi_Aula := 2;
+            MeuDialeg.UPDATE(1, RegistreGrup.Codi_Grup); // Omplir el camp1
+            MeuDialeg.UPDATE(2, RegistreGrup.Nom_Grup); // Omplir el camp2.
+            MeuDialeg.UPDATE(3, RegistreGrup.Codi_Aula); // Omplir el camp3.
+            SLEEP(5000);
+            RegistreGrup.INSERT;
+            // Insertem el tercer registre
+            SLEEP(5000);
+            RegistreGrup.INIT;
+            RegistreGrup.Codi_Grup := 3;
+            RegistreGrup.Nom_Grup := 'TIM6';
+            RegistreGrup.Codi_Aula := 3;
+            MeuDialeg.UPDATE(1, RegistreGrup.Codi_Grup); // Omplir el camp1
+            MeuDialeg.UPDATE(2, RegistreGrup.Nom_Grup); // Omplir el camp2.
+            MeuDialeg.UPDATE(3, RegistreGrup.Codi_Aula); // Omplir el camp3.
+            SLEEP(5000);
+            RegistreGrup.INSERT;
+
+            MeuDialeg.CLOSE;
+
+            //Mostrem el registre de la taula 50001 Grups que t‚ com a codi de grup '2'
+            MeuDialeg.OPEN('Di…leg5 - GET\Codi Grup: #1######\Nom Grup: #2######\Codi Aula: #3######\Nom Aula: #4######');
+            WITH RegistreGrup DO BEGIN
+              IF GET(2) THEN BEGIN
+                  RegistreAula.GET(Codi_Aula);
+                  MeuDialeg.UPDATE(1,Codi_Grup);
+                  MeuDialeg.UPDATE(2,Nom_Grup);
+                  MeuDialeg.UPDATE(3,Codi_Aula);
+                  MeuDialeg.UPDATE(4,RegistreAula.Nom_Aula);
+                  SLEEP(5000);
+              END;
+            END;
+
+            MeuDialeg.CLOSE;
+
+            //Mostrem els registrse de la taula 50001 Grups que t‚ com a nom de grup 'TIM6'
+            Comptador := 0;
+            WITH RegistreGrup DO BEGIN
+              SETCURRENTKEY(Nom_Grup);
+              SETFILTER(Nom_Grup,'TIM6');
+              IF FINDFIRST THEN
+                MeuDialeg.OPEN('Di…leg6 - SETFILTER\Codi Grup: #1######\Nom Grup: #2######\ Codi Aula: #3######\ Nom Aula: #4######\ @5@@@@@@@@@');
+              REPEAT
+                Comptador +=1;
+                RegistreAula.GET(Codi_Aula);
+                MeuDialeg.UPDATE(1,Codi_Grup);
+                MeuDialeg.UPDATE(2,Nom_Grup);
+                MeuDialeg.UPDATE(3,Codi_Aula);
+                MeuDialeg.UPDATE(4,RegistreAula.Nom_Aula);
+                MeuDialeg.UPDATE(5,ROUND( Comptador/RegistreGrup.COUNT*10000, 1));
+                SLEEP(5000);
+              UNTIL NEXT=0;
+            END;
+
+            MeuDialeg.CLOSE;
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      MeuDialeg@1106000000 : Dialog;
+      TextMostrar@1106000001 : Text;
+      NumCodiAula@1106000002 : Integer;
+      NomNomAula@1106000003 : Text;
+      RegistreAula@1106000004 : Record 50000;
+      RegistreGrup@1106000005 : Record 50001;
+      Comptador@1106000006 : Integer;
+
+    BEGIN
+    END.
+  }
+}
+

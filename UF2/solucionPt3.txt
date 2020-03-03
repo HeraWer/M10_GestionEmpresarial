@@ -1,0 +1,272 @@
+OBJECT Codeunit 50004 Pt3
+{
+  OBJECT-PROPERTIES
+  {
+    Date=08/03/16;
+    Time=18:24:07;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+            CR := 13; // Carriage Return - (Hex $0D)
+            LF := 10; // Line Feed - (Hex $0A)
+
+            Menu := Window.InputBox('1: Decimal to base'+ FORMAT(CR)+FORMAT(LF)+'2: Factorial'+ FORMAT(CR)+FORMAT(LF)+'3: Fibonacci'+ FORMAT(CR)+FORMAT(LF)+'4: Prime'+ FORMAT(CR)+FORMAT(LF)+'5: Mastermind', 'Menu Pt1', '', 100, 100);
+
+              CASE Menu OF
+                '1':
+                BEGIN
+                  b[1]:=2;
+                  b[2]:=8;
+                  b[3]:=16;
+                  //Collect decimal number
+                  EVALUATE(number,Window.InputBox('Put a decimal number:', 'Converttobase', '', 100, 100));
+
+                  //use function to convert in binary, octal and hexadecimal
+                  FOR j:= 1 TO 3 DO
+                    messages[j]:=FORMAT(convertobase(number,b[j]));
+
+                  //Print the result
+                  MESSAGE('El number %1 in decimal, \it is %2 in Binary, \%3 in Octal, \%4 in Hexadecimal',number,messages[1],messages[2],messages[3]);
+                END;
+                '2':
+                BEGIN
+                  //Display message and title
+                  EVALUATE(number,Window.InputBox('Enter value:', 'Factorial number', '', 100, 100));
+                  //print result
+                  MESSAGE('The factorial is:\%1 != %2',number,factorial(number));
+                END;
+                '3':
+                BEGIN
+                  //Display message and title
+                  EVALUATE(number,Window.InputBox('Enter value:', 'Fibonacci number', '', 100, 100));
+
+                  //print result
+                  MESSAGE('The serie %1 in the fibonacci number is %2',number,fibonacci(number));
+                END;
+
+                '4':
+                BEGIN
+                  //Display message and title
+                  EVALUATE(number,Window.InputBox('Enter value:', 'isPrime', '', 100, 100));
+                  //print result
+                  MESSAGE('The number %1 %2',number,isPrime(number));
+                END;
+                '5':
+                  masterMind();
+                END;
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      Window@1001 : DotNet "'Microsoft.VisualBasic, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.Microsoft.VisualBasic.Interaction" RUNONCLIENT;
+      CustomerNo@1000 : Text[30];
+      number@1106000000 : Integer;
+      b@1106000001 : ARRAY [3] OF Integer;
+            messages@1106000003 : ARRAY [3] OF Text;
+            Menu@1106000002 : Text;
+            j@1106000004 : Integer;
+            CR@1106000006 : Char;
+            LF@1106000005 : Char;
+
+    LOCAL PROCEDURE convertobase@1106000001(n@1106000000 : Integer;base@1106000007 : Integer) mes : Text;
+    VAR
+      coc@1106000002 : Integer;
+      r@1106000003 : Integer;
+      pos@1106000004 : Integer;
+      res@1106000005 : Text;
+      num@1106000006 : Integer;
+      i@1106000001 : Integer;
+    BEGIN
+      num:=n;
+      pos:=1;
+      r:=0;
+      coc:=0;
+      IF base>num THEN
+      BEGIN
+         IF base=16 THEN
+         BEGIN
+           IF num>9 THEN
+           BEGIN
+             CASE num OF
+                  10 : res := res+'A';
+                  11 : res := res+'B';
+                  12 : res := res+'C';
+                  13 : res := res+'D';
+                  14 : res := res+'E';
+                  15 : res := res+'F';
+              END;
+           END
+           ELSE
+           BEGIN
+             res:=res+FORMAT(num);
+           END
+         END;
+
+        mes:= res;
+        EXIT (mes);
+      END
+      ELSE
+      BEGIN
+        REPEAT
+          r:=num MOD base;
+          coc := num DIV base;
+          IF base=16 THEN
+          BEGIN
+            IF r>9 THEN
+            BEGIN
+              CASE FORMAT(r) OF
+                   '10' : res := res+'A';
+                   '11' : res := res+'B';
+                   '12' : res := res+'C';
+                   '13' : res := res+'D';
+                   '14' : res := res+'E';
+                   '15' : res := res+'F';
+               END;
+            END
+            ELSE
+            BEGIN
+              res:=res+FORMAT(r);
+            END
+          END
+          ELSE
+          BEGIN
+            res:=res+FORMAT(r);
+          END;
+          num:=coc;
+          pos:=pos+1;
+          IF(num<base)THEN
+          BEGIN
+            IF base=16 THEN
+            BEGIN
+              IF num>9 THEN
+              BEGIN
+                CASE FORMAT(num) OF
+                     '10' : res := res+'A';
+                     '11' : res := res+'B';
+                     '12' : res := res+'C';
+                     '13' : res := res+'D';
+                     '14' : res := res+'E';
+                     '15' : res := res+'F';
+                 END;
+              END
+              ELSE
+              BEGIN
+                res:=res+FORMAT(num);
+              END
+            END
+            ELSE
+            BEGIN
+              res:=res+FORMAT(num);
+            END
+          END
+        UNTIL coc<base;
+        FOR i:=pos DOWNTO 1 DO BEGIN
+          mes := mes + FORMAT(res[i]);
+        END;
+        EXIT (mes);
+      END
+    END;
+
+    LOCAL PROCEDURE factorial@1106000000(n@1106000000 : Integer) num : Integer;
+    BEGIN
+      IF n<2 THEN
+      BEGIN
+        num:=1;
+        EXIT(num);
+      END
+      ELSE
+      BEGIN
+        num:=n*factorial(n-1);
+      END;
+    END;
+
+    LOCAL PROCEDURE fibonacci@1106000003(n@1106000000 : Integer) num : Integer;
+    BEGIN
+      IF n=0 THEN
+      BEGIN
+        num:=0;
+        EXIT(num);
+      END
+      ELSE IF n=1 THEN
+      BEGIN
+        num:=1;
+        EXIT(num);
+      END
+      ELSE
+      BEGIN
+        num:=fibonacci(n-1)+fibonacci(n-2);
+      END;
+    END;
+
+    LOCAL PROCEDURE isPrime@1106000006(n@1106000000 : Integer) messages : Text;
+    VAR
+      value@1106000002 : Integer;
+      i@1106000001 : Integer;
+    BEGIN
+      value:=0;
+      FOR i := 2 TO n - 1 DO
+      BEGIN
+        IF n MOD i = 0 THEN
+          value := 1;
+      END;
+      IF value = 0 THEN
+      BEGIN
+        EXIT('is prime')
+      END
+      ELSE
+      BEGIN
+        EXIT('is not prime')
+      END;
+    END;
+
+    LOCAL PROCEDURE masterMind@1106000009();
+    VAR
+      j@1106000010 : Integer;
+      secret@1106000009 : Text;
+      CR@1106000008 : Char;
+      LF@1106000007 : Char;
+      count@1106000006 : Integer;
+      indied@1106000005 : Integer;
+      inwounded@1106000004 : Integer;
+      mychoice@1106000002 : Text;
+      i@1106000001 : Integer;
+    BEGIN
+      CR := 13; // Carriage Return - (Hex $0D)
+      LF := 10; // Line Feed - (Hex $0A)
+
+      EVALUATE(secret,Window.InputBox('Welcome to MASTER MIND. ' + FORMAT(CR)+FORMAT(LF)+'Tell me the secret combination (4 numbers): ', 'MASTER MIND', '', 100, 100));
+
+      FOR count := 1 TO 4 DO
+       BEGIN
+        indied := 0;
+        inwounded := 0;
+        mychoice := Window.InputBox('Tell me your choice (4 numbers). ' + FORMAT(CR)+FORMAT(LF)+' Try: '+FORMAT(count), 'MASTERMIND', '', 100, 100);
+        FOR i := 1 TO 4 DO
+          FOR j := 1 TO 4 DO
+            IF COPYSTR(secret,i,1) = COPYSTR(mychoice,j,1) THEN
+              IF i = j THEN
+                indied += 1
+              ELSE
+                inwounded += 1;
+         Window.MsgBox('Dead: '+FORMAT(indied)+'  Wounded: '+FORMAT(inwounded),0,'MASTERMIND');
+         IF indied = 4 THEN
+         BEGIN
+           Window.MsgBox('Conglaturations! You won',0,'MASTERMIND');
+           EXIT;
+         END;
+        END;
+      Window.MsgBox('Game Over',0,'MASTERMIND');
+    END;
+
+    BEGIN
+    {
+      // Proposta de soluci� Pt1
+    }
+    END.
+  }
+}

@@ -1,0 +1,36 @@
+OBJECT Codeunit 50032 Exercici2
+{
+  OBJECT-PROPERTIES
+  {
+    Date=13/01/20;
+    Time=17:49:16;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+            VariableInt1 := 0;
+            N := 0;
+            WHILE VariableInt1 <= 100000 DO
+            BEGIN
+              VariableInt1 := POWER(2,N);
+              MESSAGE('2 elevat a ' + FORMAT(N) + ' ‚s ' + FORMAT(VariableInt1));
+              N := N + 1;
+            END;
+
+            MESSAGE('Exponent que ens dona un valor per sota de 100.000 ‚s ' + FORMAT(N - 2));
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      VariableInt1@1106000000 : Integer;
+      N@1106000001 : Integer;
+
+    BEGIN
+    END.
+  }
+}
+

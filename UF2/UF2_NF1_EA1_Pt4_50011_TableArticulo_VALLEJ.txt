@@ -1,0 +1,34 @@
+OBJECT Table 50011 ARTICULOS
+{
+  OBJECT-PROPERTIES
+  {
+    Date=17/02/20;
+    Time=16:33:26;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+  }
+  FIELDS
+  {
+    { 1   ;   ;CLAVE_ARTICULO      ;Integer        }
+    { 2   ;   ;NOMBRE              ;Text100        }
+    { 3   ;   ;PRECIO              ;Integer        }
+    { 4   ;   ;FABRICANTE          ;Integer       ;TableRelation=FABRICANTES.CLAVE_FABRICANTE }
+  }
+  KEYS
+  {
+    {    ;CLAVE_ARTICULO                          ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

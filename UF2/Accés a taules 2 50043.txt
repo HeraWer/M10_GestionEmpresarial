@@ -1,0 +1,123 @@
+OBJECT Codeunit 50043 Prova AccÇs a taules 2
+{
+  OBJECT-PROPERTIES
+  {
+    Date=10/02/20;
+    Time=13:39:53;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+            //Prova amb SumIndexFields
+            CustLedgerEntry.SETCURRENTKEY("Customer No.","Posting Date");
+            CustLedgerEntry.SETRANGE("Customer No.", '20000');
+            CustLedgerEntry.SETRANGE("Posting Date",150117D,170117D);
+            CustLedgerEntry.CALCSUMS(CustLedgerEntry."Sales (LCY)");
+            MESSAGE('La suma de tots els Sales (LCY) amb el filtre donat Çs %1',CustLedgerEntry."Sales (LCY)");
+
+            //Prova amb FlowFields. Hem comprovat que el camp Balance de la taula Customer Çs FlowField de tipus Suma
+            CustomerRec1."No." := '10001';
+            CustomerRec1.FIND('=');
+            MESSAGE('La suma de tots els Amount pel client seleccionat Çs %1',CustomerRec1.Balance);
+            MESSAGE('El valor del cap Comment que Çs Flow Field de tipus Exist Çs %1',CustomerRec1.Comment);
+
+            //Transacci¢ INIT (Inicialitza el registre) i DesprÇs fem INSERT
+            //CustomerRec1.INIT;
+            //CustomerRec1."No." := '10002';
+            //CustomerRec1.INSERT;
+
+            //Transacci¢ INIT (Inicialitza el registre) i DesprÇs fem INSERT
+            //CustomerRec1."No." := '10002';
+            //CustomerRec1.INIT;
+            //CustomerRec1.INSERT;
+
+            //Transacci¢ DELETE (Elimina el registre)
+            CustomerRec1."No." := '10001';
+            CustomerRec1.DELETE;
+            //CustomerRec1.DELETEALL;
+
+            //Transacci¢ VALIDATE (Assigna Valor a un camp)
+            GeneralLedgerEntry."Entry No." := 100;
+            GeneralLedgerEntry.VALIDATE(Description,'Prova Validate');
+            //Transacci¢ VALIDATE (Assigna Valor a un camp)
+            CustomerRec1."No.":= '10001';
+            CustomerRec1.VALIDATE(Name,'Prova Validate JMR');
+
+            //Transacci¢ MODIFY (Modifica el valor d'un camp)
+            ItemRec."No." := '1000';
+            ItemRec.Description := 'Bicicleta JMR';
+            ItemRec.MODIFY;
+
+            //Transacci¢ COMMIT (Amb el COMMIT finalitzem una transacci¢ per a prepara el sistema per a una altra transacci¢)
+            //BeginWriteTransactions
+            //(C/AL Statements) // Transacci¢1
+            //COMMIT
+            //(C/AL Statements) // Transacci¢2
+            //EndWriteTransactions
+
+            //Funci¢ CONFIRM
+            Acord:= CONFIRM('Esteu dÔacord en anar de viatge?',TRUE);
+            MESSAGE('Opci¢ triada Çs: %1',Acord);
+
+            //Funci¢ STRMENU Prova 1
+            Opcions:= Text000;
+            //Posem per defecte l'opci¢ 3
+            Seleccionat:= DIALOG.STRMENU(Opcions, 3,Text002);
+            MESSAGE(Text001,Seleccionat);
+
+            //Funci¢ STRMENU Prova 2
+            Opcions:= 'Taronja,PlÖtan,Pera';
+            //Posem per defecte l'opci¢ 1
+            Seleccionat:= DIALOG.STRMENU(Opcions, 1,'Selecciona una fruita');
+            MESSAGE('La fruita seleccionada Çs %1',Seleccionat);
+
+            //Funci¢ OPEN,UPDATE i CLOSE Prova 1
+            MyNext:=0;
+            MyDialog.OPEN('Contar fins a 4 #1',MyNext);
+            REPEAT
+              SLEEP(2000);
+              MyNext := MyNext + 1;
+              MyDialog.UPDATE(); //Modifiquem el camp en el diÖleg
+            UNTIL MyNext = 4;
+            SLEEP(2000);
+            MyDialog.CLOSE;
+
+            //Funci¢ OPEN,UPDATE i CLOSE Prova 2
+            MyNext:=0;
+            MyDialog.OPEN('ProgrÇs de 0 a 9999 @1',MyNext);
+            REPEAT
+              //Fer algun procÇs
+                MyNext := MyNext + 1;
+                IF MyNext = 5000 THEN
+                  SLEEP(2000);
+                MyDialog.UPDATE(); //Modifiquem el camp en el diÖleg
+            UNTIL MyNext = 9999;
+            SLEEP(2000);
+            MyDialog.CLOSE;
+
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      CustomerRec1@1106000000 : Record 18;
+      Text000@1106000001 : TextConst 'ENU=Save,Delete,Exit,Find';
+      Text001@1106000002 : TextConst 'ENU=L''opci¢ seleccionada Çs %1';
+      CustLedgerEntry@1106000011 : Record 21;
+      GeneralLedgerEntry@1106000005 : Record 17;
+      ItemRec@1106000006 : Record 27;
+      Acord@1106000009 : Boolean;
+      Opcions@1106000003 : Text[30];
+      Seleccionat@1106000004 : Integer;
+      Text002@1106000007 : TextConst 'ENU=Tria una de les segÅents opcions';
+      MyDialog@1106000008 : Dialog;
+      MyNext@1106000010 : Integer;
+
+    BEGIN
+    END.
+  }
+}
+

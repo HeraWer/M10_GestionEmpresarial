@@ -1,0 +1,913 @@
+OBJECT Codeunit 50045 Practica4
+{
+  OBJECT-PROPERTIES
+  {
+    Date=24/02/20;
+    Time=20:38:42;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    OnRun=VAR
+            Decimal@1106000000 : Integer;
+          BEGIN
+            CR := 13; // Carriage Return - (Hex $0D)
+            LF := 10; // Line Feed - (Hex $0A)
+            Menu();
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      Window@1106000000 : DotNet "'Microsoft.VisualBasic, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.Microsoft.VisualBasic.Interaction" RUNONCLIENT;
+      Decimal@1106000001 : Integer;
+      CR@1106000004 : Char;
+      LF@1106000003 : Char;
+      TablaArticulos@1106000005 : Record 50011;
+      TablaFabricante@1106000006 : Record 50010;
+      CLAVE_ARTICULO@1106000007 : Integer;
+      Nombre@1106000008 : Text;
+      Precio@1106000009 : Integer;
+      Fabricante@1106000010 : Integer;
+      MDialog@1106000002 : Dialog;
+      repetit@1106000011 : Boolean;
+      nomArticle@1106000012 : Text;
+      posicioArticle@1106000013 : Text;
+      taulaRepetits@1106000014 : Record 50011;
+      mitjanaPreu@1106000015 : Decimal;
+
+    LOCAL PROCEDURE Menu@1106000003();
+    BEGIN
+      ChosenOption(Window.InputBox('Introdueix una opcio:', 'Introdueix un nombre', '', 100, 100));
+    END;
+
+    LOCAL PROCEDURE ChosenOption@1106000006(option@1106000000 : Text);
+    BEGIN
+      CASE option OF
+        '2':
+          BEGIN
+            ejercicio2();
+          END;
+        '3':
+          BEGIN
+            ejercicio3();
+          END;
+        '4':
+          BEGIN
+            ejercicio4();
+          END;
+        '5':
+          BEGIN
+            ejercicio5();
+          END;
+        '6':
+          BEGIN
+            ejercicio6();
+          END;
+        '7':
+          BEGIN
+            ejercicio7();
+          END;
+        '8':
+          BEGIN
+            ejercicio8();
+          END;
+        '9':
+          BEGIN
+            ejercicio9();
+          END;
+       '10':
+          BEGIN
+            ejercicio10();
+          END;
+       '11':
+          BEGIN
+            ejercicio11();
+          END;
+       '12':
+          BEGIN
+            ejercicio12();
+          END;
+       '13':
+          BEGIN
+            ejercicio13();
+          END;
+        '14':
+          BEGIN
+            ejercicio14();
+          END;
+        '15':
+          BEGIN
+            ejercicio15();
+          END;
+        '16':
+          BEGIN
+            ejercicio16();
+          END;
+        '14':
+          BEGIN
+            ejercicio14();
+          END;
+        '17':
+          BEGIN
+            ejercicio17();
+          END;
+        '18':
+          BEGIN
+            ejercicio18();
+          END;
+        '19':
+          BEGIN
+            ejercicio19();
+          END;
+        '20':
+          BEGIN
+            ejercicio20();
+          END;
+        '21':
+          BEGIN
+            ejercicio21();
+          END;
+        '22':
+          BEGIN
+            ejercicio22();
+          END;
+        '23':
+          BEGIN
+            ejercicio23();
+          END;
+        '24':
+          BEGIN
+            ejercicio24();
+          END;
+        '25':
+          BEGIN
+            ejercicio25();
+          END;
+        '26':
+          BEGIN
+            ejercicio26();
+          END;
+        '27':
+          BEGIN
+            ejercicio27();
+          END;
+
+
+        ELSE
+          MESSAGE('La opcio no es a la llista!');
+      END;
+
+      // 3.Obtenir tots les dades dels productes de la botiga
+    END;
+
+    LOCAL PROCEDURE ejercicio3@1106000004();
+    BEGIN
+
+            BEGIN
+            MDialog.OPEN('Ejercici3 - Articulos\Codigo: #1######\Nombre: #2######\Precio: #3######\Fabricante: #4######');
+            WITH TablaArticulos DO BEGIN
+              IF FIND('-') THEN
+                REPEAT
+                  MDialog.UPDATE(1,CLAVE_ARTICULO);
+                  MDialog.UPDATE(2,NOMBRE);
+                  MDialog.UPDATE(3,PRECIO);
+                  MDialog.UPDATE(4,FABRICANTE);
+                  SLEEP(2000);
+                UNTIL NEXT = 0;
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 4.Obtenir els noms dels productes de la botiga
+    END;
+
+    LOCAL PROCEDURE ejercicio4@1106000005();
+    BEGIN
+            BEGIN
+            MDialog.OPEN('Ejercici4 - Articulos\Nombre: #1######\');
+            WITH TablaArticulos DO BEGIN
+              IF FIND('-') THEN
+                REPEAT
+                  MDialog.UPDATE(1,NOMBRE);
+                  SLEEP(2000);
+                UNTIL NEXT = 0;
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 5.Obtenir els noms i preus dels productes de la botiga
+    END;
+
+    LOCAL PROCEDURE ejercicio5@1106000007();
+    BEGIN
+
+            BEGIN
+            MDialog.OPEN('Ejercici5 - Articulos\Nombre: #1######\Precio: #2######');
+            WITH TablaArticulos DO BEGIN
+              IF FIND('-') THEN
+                REPEAT
+                  MDialog.UPDATE(1,NOMBRE);
+                  MDialog.UPDATE(2,PRECIO);
+                  SLEEP(2000);
+                UNTIL NEXT = 0;
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 6.Obtenir els noms dels articles sense repeticions
+    END;
+
+    LOCAL PROCEDURE ejercicio6@1106000008();
+    BEGIN
+
+         BEGIN
+            MDialog.OPEN('Ejercici6 - Prod.\Nombre: #1######\Precio: #2######');
+            // bucle1
+            WITH TablaArticulos DO BEGIN
+              IF FIND('-') THEN
+                REPEAT
+                  // Faig una variable repetit per saber si la fila de la taula es troba repetida
+                  repetit := FALSE;
+                  // Agafo el nombre de la taula i la guardo dins d'una variable
+                  nomArticle := NOMBRE;
+                  // Agafo la posicio de la taula article
+                  posicioArticle := TablaArticulos.GETPOSITION;
+                  //Aqui el que faig es generar una altre table identica on comparare les variables abans inicializadas
+                  WITH taulaRepetits DO BEGIN
+                    IF FIND('-') THEN
+                      REPEAT
+                      //Aqui comparo sempre amb  les posicions anteriors aixi, si la posicio 2 no te el mateix nombre que la posicio 1 la mostrare
+                      // Per exemple si la posicio 3 la comparo amb la 2 no es igual pero si amb la 1 que ja habia mostrar abans, no la mostrare
+                        IF taulaRepetits.GETPOSITION = posicioArticle THEN BEGIN
+                      //Faig un set de la posicio per aixi poder sortir del bucle
+                          taulaRepetits.SETPOSITION('CLAVE_ARTICULO=CONST(1000000)');
+                        END
+                        ELSE BEGIN
+                        //Aqui es on faig les comparacions de nombres amb les posicio que abans habia fet aixi veure si es el mateix nombre o no
+                        // Y lo donare valor al boolean per saber si es repetit o no.
+                          IF nomArticle = NOMBRE THEN BEGIN
+                            repetit := TRUE;
+                          END;
+                        END;
+                      UNTIL NEXT = 0;
+                  END;
+                  IF repetit = FALSE THEN BEGIN
+                    MDialog.UPDATE(1,NOMBRE);
+                    MDialog.UPDATE(2,PRECIO);
+                    SLEEP(2000);
+                  END;
+                UNTIL NEXT = 0;
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 7.Obtenir totes les dades de l'article que t‚ com a clau de producte ‚s '5'
+    END;
+
+    LOCAL PROCEDURE ejercicio7@1106000009();
+    BEGIN
+
+          BEGIN
+            MDialog.OPEN('Ejercici7 - Articulos\Codigo: #1######\Nombre: #2######\Precio: #3######\Fabricante: #4######');
+            WITH TablaArticulos DO BEGIN
+              IF GET(5) THEN BEGIN
+                MDialog.UPDATE(1,CLAVE_ARTICULO);
+                MDialog.UPDATE(2,NOMBRE);
+                MDialog.UPDATE(3,PRECIO);
+                MDialog.UPDATE(4,FABRICANTE);
+                SLEEP(2000);
+              END;
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 8.Obtenir totes les dades de l'article que t‚ com nom de producte ''Teclado"
+    END;
+
+    LOCAL PROCEDURE ejercicio8@1106000010();
+    BEGIN
+
+          BEGIN
+            MDialog.OPEN('Ejercici8 - Articulos\Codigo: #1######\Nombre: #2######\Precio: #3######\Fabricante: #4######');
+            WITH TablaArticulos DO BEGIN
+              SETFILTER(NOMBRE, 'Teclado');
+              IF FINDFIRST THEN BEGIN
+                MDialog.UPDATE(1,CLAVE_ARTICULO);
+                MDialog.UPDATE(2,NOMBRE);
+                MDialog.UPDATE(3,PRECIO);
+                MDialog.UPDATE(4,FABRICANTE);
+                SLEEP(2000);
+              END;
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 9.Obtenir totes les dades de la Memoria RAM i mem•ries USB
+    END;
+
+    LOCAL PROCEDURE ejercicio9@1106000011();
+    BEGIN
+
+          BEGIN
+            MDialog.OPEN('Ejercici9 - Articulos\Codigo: #1######\Nombre: #2######\Precio: #3######\Fabricante: #4######');
+            WITH TablaArticulos DO BEGIN
+              SETFILTER(NOMBRE, 'Memoria RAM|Memoria USB');
+              IF FINDFIRST THEN BEGIN
+                REPEAT
+                MDialog.UPDATE(1,CLAVE_ARTICULO);
+                MDialog.UPDATE(2,NOMBRE);
+                MDialog.UPDATE(3,PRECIO);
+                MDialog.UPDATE(4,FABRICANTE);
+                SLEEP(2000);
+                UNTIL NEXT = 0;
+              END;
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 10.Obtenir totes les dades dels articles que comencen amb 'M'
+    END;
+
+    LOCAL PROCEDURE ejercicio10@1106000012();
+    BEGIN
+
+          BEGIN
+            MDialog.OPEN('Ejercici10 - Articulos\Codigo: #1######\Nombre: #2######\Precio: #3######\Fabricante: #4######');
+            WITH TablaArticulos DO BEGIN
+              SETFILTER(NOMBRE, 'M*');
+              IF FINDFIRST THEN BEGIN
+                REPEAT
+                MDialog.UPDATE(1,CLAVE_ARTICULO);
+                MDialog.UPDATE(2,NOMBRE);
+                MDialog.UPDATE(3,PRECIO);
+                MDialog.UPDATE(4,FABRICANTE);
+                SLEEP(2000);
+                UNTIL NEXT = 0;
+              END;
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 11.Obtenir el nom dels productes on el preu sigui  $ 100
+    END;
+
+    LOCAL PROCEDURE ejercicio11@1106000013();
+    BEGIN
+
+          BEGIN
+            MDialog.OPEN('Ejercici11 - Articulos\Codigo: #1######\Nombre: #2######\Precio: #3######\Fabricante: #4######');
+            WITH TablaArticulos DO BEGIN
+              SETFILTER(PRECIO, '100');
+              IF FINDFIRST THEN BEGIN
+                REPEAT
+                MDialog.UPDATE(1,CLAVE_ARTICULO);
+                MDialog.UPDATE(2,NOMBRE);
+                MDialog.UPDATE(3,PRECIO);
+                MDialog.UPDATE(4,FABRICANTE);
+                SLEEP(2000);
+                UNTIL NEXT = 0;
+              END;
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 12.Obtenir el nom dels productes on el preu sigui m‚s gran de $ 200
+    END;
+
+    LOCAL PROCEDURE ejercicio12@1106000014();
+    BEGIN
+
+          BEGIN
+            MDialog.OPEN('Ejercici12 - Articulos\Codigo: #1######\Nombre: #2######\Precio: #3######\Fabricante: #4######');
+            WITH TablaArticulos DO BEGIN
+              SETFILTER(PRECIO, '>200');
+              IF FINDFIRST THEN BEGIN
+                REPEAT
+                MDialog.UPDATE(1,CLAVE_ARTICULO);
+                MDialog.UPDATE(2,NOMBRE);
+                MDialog.UPDATE(3,PRECIO);
+                MDialog.UPDATE(4,FABRICANTE);
+                SLEEP(2000);
+                UNTIL NEXT = 0;
+              END;
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 13.Obtenir totes les dades dels articles que t‚ com a preu entre $100 i $350
+    END;
+
+    LOCAL PROCEDURE ejercicio13@1106000015();
+    BEGIN
+
+          BEGIN
+            MDialog.OPEN('Ejercici13 - Articulos\Codigo: #1######\Nombre: #2######\Precio: #3######\Fabricante: #4######');
+            WITH TablaArticulos DO BEGIN
+              SETFILTER(PRECIO, '100..350');
+              IF FINDFIRST THEN BEGIN
+                REPEAT
+                MDialog.UPDATE(1,CLAVE_ARTICULO);
+                MDialog.UPDATE(2,NOMBRE);
+                MDialog.UPDATE(3,PRECIO);
+                MDialog.UPDATE(4,FABRICANTE);
+                SLEEP(2000);
+                UNTIL NEXT = 0;
+              END;
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 14.Obtenir el preu mig de tots el productes
+    END;
+
+    LOCAL PROCEDURE ejercicio14@1106000016();
+    BEGIN
+
+          BEGIN
+            MDialog.OPEN('Ejercici14 - Articulos\PrecioMedio: #1######');
+            WITH TablaArticulos DO BEGIN
+              TablaArticulos.CALCSUMS(PRECIO);
+              mitjanaPreu := TablaArticulos.PRECIO / TablaArticulos.COUNT;
+                MDialog.UPDATE(1, mitjanaPreu);
+                SLEEP(2000);
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 15.Obtenir el preu mig dels articles que tenen com a codi de fabricant el 2
+    END;
+
+    LOCAL PROCEDURE ejercicio15@1106000017();
+    BEGIN
+
+          BEGIN
+            MDialog.OPEN('Ejercici15 - Articulos\PrecioMedio: #1######');
+            WITH TablaArticulos DO BEGIN
+              SETFILTER(FABRICANTE,'2');
+              TablaArticulos.CALCSUMS(PRECIO);
+              mitjanaPreu := TablaArticulos.PRECIO / TablaArticulos.COUNT;
+                MDialog.UPDATE(1, mitjanaPreu);
+                SLEEP(2000);
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 16.Obtenir el nom i el preu dels articles ordenats per nom
+    END;
+
+    LOCAL PROCEDURE ejercicio16@1106000018();
+    BEGIN
+
+          BEGIN
+            MDialog.OPEN('Ejercici16 - Articulos\Nombre: #1######\Precio: #2######');
+            TablaArticulos.SETCURRENTKEY(NOMBRE);
+            WITH TablaArticulos DO BEGIN
+              IF FIND('-') THEN
+                REPEAT
+                  MDialog.UPDATE(1,NOMBRE);
+                  MDialog.UPDATE(2,PRECIO);
+                  SLEEP(2000);
+                UNTIL NEXT = 0;
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 17.Obtenir totes les dades dels productes ordenats descendentment per preu
+    END;
+
+    LOCAL PROCEDURE ejercicio17@1106000019();
+    BEGIN
+
+          BEGIN
+            MDialog.OPEN('Ejercici17 - Articulos\Nombre: #1######\Precio: #2######');
+            TablaArticulos.SETCURRENTKEY(PRECIO);
+            TablaArticulos.SETASCENDING(PRECIO, FALSE);
+            WITH TablaArticulos DO BEGIN
+              IF FIND('-') THEN
+                REPEAT
+                  MDialog.UPDATE(1,NOMBRE);
+                  MDialog.UPDATE(2,PRECIO);
+                  SLEEP(2000);
+                UNTIL NEXT = 0;
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 18.Obtenir el nom i preu dels articles que tenen com a preu major a $ 250 i ordenar-los descendentment per preu i despr‚s ascendentment per nom
+    END;
+
+    LOCAL PROCEDURE ejercicio18@1106000020();
+    BEGIN
+
+          BEGIN
+            MDialog.OPEN('Ejercici18 - Articulos\Nombre: #1######\Precio: #2######');
+            TablaArticulos.SETCURRENTKEY(NOMBRE, PRECIO);
+            TablaArticulos.SETASCENDING(PRECIO, FALSE);
+            TablaArticulos.SETASCENDING(NOMBRE, TRUE);
+            WITH TablaArticulos DO BEGIN
+              SETFILTER(PRECIO, '>250');
+              IF FIND('-') THEN
+                REPEAT
+                  MDialog.UPDATE(1,NOMBRE);
+                  MDialog.UPDATE(2,PRECIO);
+                  SLEEP(2000);
+                UNTIL NEXT = 0;
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 19.Obtenir un llistat complet dels productes, incloure per cada article les dades de l'article i del fabricant
+    END;
+
+    LOCAL PROCEDURE ejercicio19@1106000021();
+    BEGIN
+
+          BEGIN
+            MDialog.OPEN('Ejercici19 - \**Fabricante**\Codigo: #1######\Nombre: #2######\**Producto**\Codigo: #3######\Nombre: #4######\Precio: #5######');
+            WITH TablaArticulos DO BEGIN
+              IF FIND('-') THEN
+                REPEAT
+                  WITH TablaFabricante DO BEGIN
+                  IF GET(TablaArticulos.FABRICANTE) THEN
+                    MDialog.UPDATE(1,CLAVE_FABRICANTE);
+                    MDialog.UPDATE(2,NOMBRE);
+                    MDialog.UPDATE(3,CLAVE_ARTICULO);
+                    MDialog.UPDATE(4,TablaArticulos.NOMBRE);
+                    MDialog.UPDATE(5,TablaArticulos.PRECIO);
+                    SLEEP(2000);
+                  END;
+                  UNTIL NEXT = 0;
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 20.Obtenir la clau de producte, nom del producte i nom del fabricant de tots els productes en venta
+    END;
+
+    LOCAL PROCEDURE ejercicio20@1106000022();
+    BEGIN
+
+          BEGIN
+            MDialog.OPEN('Ejercici20 - \**Producto**\Codigo: #1######\Nombre: #2######\**Fabricante**\Codigo: #3######');
+            WITH TablaArticulos DO BEGIN
+              IF FIND('-') THEN
+                REPEAT
+                  WITH TablaFabricante DO BEGIN
+                  IF GET(TablaArticulos.FABRICANTE) THEN
+                    MDialog.UPDATE(1,CLAVE_ARTICULO);
+                    MDialog.UPDATE(2,NOMBRE);
+                    MDialog.UPDATE(3,CLAVE_FABRICANTE);
+                    SLEEP(2000);
+
+                  END;
+                  UNTIL NEXT = 0;
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 21.Obtenir el nom i preu dels articles on el fabricant sigui Logitech ordenar-los alfabŠticament per nom del producte
+    END;
+
+    LOCAL PROCEDURE ejercicio21@1106000023();
+    BEGIN
+
+          BEGIN
+            MDialog.OPEN('Ejercici21 - \**Producto**\Nombre: #1######\Precio: #2######');
+            TablaArticulos.SETCURRENTKEY(NOMBRE);
+            TablaArticulos.SETASCENDING(NOMBRE, TRUE);
+            WITH TablaArticulos DO BEGIN
+              IF FIND('-') THEN
+                REPEAT
+                  IF FABRICANTE = 3 THEN BEGIN
+                    MDialog.UPDATE(1,NOMBRE);
+                    MDialog.UPDATE(2,PRECIO);
+                    SLEEP(2000);
+                    END;
+                    UNTIL NEXT = 0;
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 22.Obtenir el nom, preu i nom de fabricant dels productes que son marca Lexar o Kingston ordenats descendent mentŠ per preu
+    END;
+
+    LOCAL PROCEDURE ejercicio22@1106000024();
+    BEGIN
+
+          BEGIN
+            MDialog.OPEN('Ejercici22 - \**Producto**\Nombre: #1######\Precio: #2######');
+            TablaArticulos.SETCURRENTKEY(NOMBRE);
+            TablaArticulos.SETASCENDING(NOMBRE, TRUE);
+            WITH TablaArticulos DO BEGIN
+              IF FIND('-') THEN
+                REPEAT
+                  IF (FABRICANTE = 1) OR (FABRICANTE = 4) THEN BEGIN
+                    MDialog.UPDATE(1,NOMBRE);
+                    MDialog.UPDATE(2,PRECIO);
+                    SLEEP(2000);
+                    END;
+                    UNTIL NEXT = 0;
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 23.Afegeix un nou producte: Clau del producte 11, Altaveus de $ 120  del fabricant 2
+    END;
+
+    LOCAL PROCEDURE ejercicio23@1106000025();
+    BEGIN
+
+          BEGIN
+            //  BORRAR PRODUCTO AL PRINCIPIO
+            WITH TablaArticulos DO BEGIN
+              IF FIND('-') THEN
+                REPEAT
+            //    Buscar producto
+                  IF TablaArticulos.CLAVE_ARTICULO = 11 THEN BEGIN
+                    TablaArticulos.DELETE;
+                  END;
+                UNTIL NEXT = 0;
+            END;
+
+            // INSERTAR NUEVO PRODUCTO
+            MDialog.OPEN('Ejercici23 - Articulo\Codigo: #1######\Nombre: #2######\Precio: #3######\Fabricante: #4######');
+            TablaArticulos.CLAVE_ARTICULO := 11;
+            TablaArticulos.NOMBRE := 'Altaveus';
+            TablaArticulos.PRECIO := 120;
+            TablaArticulos.FABRICANTE := 2;
+            TablaArticulos.INSERT;
+            TablaArticulos.INIT;
+            MDialog.UPDATE(1,11);
+            MDialog.UPDATE(2,'Altaveus');
+            MDialog.UPDATE(3,120);
+            MDialog.UPDATE(4,2);
+            SLEEP(2000);
+            MDialog.CLOSE;
+          END;
+
+      // 24.Canvia el nom del producte 6 a 'Impresora Laser'
+    END;
+
+    LOCAL PROCEDURE ejercicio24@1106000026();
+    BEGIN
+
+          BEGIN
+            MDialog.OPEN('Ejercici24 - UPDATE\Codigo: #1######\Nombre Antiguo: #2######\Nombre Nuevo: #3######');
+            WITH TablaArticulos DO BEGIN
+              IF FIND('-') THEN
+                REPEAT
+                  IF TablaArticulos.CLAVE_ARTICULO = 6 THEN BEGIN
+                    MDialog.UPDATE(1,CLAVE_ARTICULO);
+                    MDialog.UPDATE(2,NOMBRE);
+                    TablaArticulos.NOMBRE := 'Impresora Laser';
+                    TablaArticulos.MODIFY;
+                    MDialog.UPDATE(3, NOMBRE);
+                    SLEEP(2000);
+                  END;
+                UNTIL NEXT = 0;
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 25.Aplicar un descompte del 10% a tots els productes
+    END;
+
+    LOCAL PROCEDURE ejercicio25@1106000027();
+    BEGIN
+
+      BEGIN
+            MDialog.OPEN('Ejercici25 - UPDATE\Codigo: #1######\Nombre: #2######\Precio Antiguo: #3######\Precio Nuevo: #4######');
+            WITH TablaArticulos DO BEGIN
+              IF FIND('-') THEN
+                REPEAT
+                  MDialog.UPDATE(1,CLAVE_ARTICULO);
+                  MDialog.UPDATE(2,NOMBRE);
+                  MDialog.UPDATE(3,PRECIO);
+                  TablaArticulos.PRECIO := TablaArticulos.PRECIO - (TablaArticulos.PRECIO * 0.1);
+                  TablaArticulos.MODIFY;
+                  MDialog.UPDATE(4, PRECIO);
+                  SLEEP(2000);
+                UNTIL NEXT = 0;
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 26.Aplicar un descompte de $ 10 a tots els productes que tinguin un preu major o igual a $ 300
+    END;
+
+    LOCAL PROCEDURE ejercicio26@1106000028();
+    BEGIN
+
+         BEGIN
+            MDialog.OPEN('Ejercicio26 - UPDATE\Codigo: #1######\Nombre: #2######\Precio Antiguo: #3######\Precio Nuevo: #4######');
+            WITH TablaArticulos DO BEGIN
+              IF FIND('-') THEN
+                REPEAT
+                  IF TablaArticulos.PRECIO >= 300 THEN BEGIN
+                    MDialog.UPDATE(1,CLAVE_ARTICULO);
+                    MDialog.UPDATE(2,NOMBRE);
+                    MDialog.UPDATE(3,PRECIO);
+                    TablaArticulos.PRECIO := TablaArticulos.PRECIO - 10;
+                    TablaArticulos.MODIFY;
+                    MDialog.UPDATE(4, PRECIO);
+                    SLEEP(2000);
+                  END;
+                UNTIL NEXT = 0;
+            END;
+            MDialog.CLOSE;
+          END;
+
+      // 27.Esborra el producte numero 6.
+    END;
+
+    LOCAL PROCEDURE ejercicio27@1106000029();
+    BEGIN
+
+       BEGIN
+            MDialog.OPEN('Ejercici27 - DELETE\Codigo: #1######\Nombre: #2######\Precio: #3######\Fabricante: #4######');
+            WITH TablaArticulos DO BEGIN
+              IF FIND('-') THEN
+                REPEAT
+            //    Buscar producto con codigo 6
+                  IF TablaArticulos.CLAVE_ARTICULO = 6 THEN BEGIN
+                    MDialog.UPDATE(1,CLAVE_ARTICULO);
+                    MDialog.UPDATE(2,NOMBRE);
+                    MDialog.UPDATE(3,PRECIO);
+                    MDialog.UPDATE(4,FABRICANTE);
+                    TablaArticulos.DELETE;// eliminar
+                    SLEEP(2000);
+                  END;
+                UNTIL NEXT = 0;
+            END;
+            MDialog.CLOSE;
+          END;
+    END;
+
+    LOCAL PROCEDURE ejercicio2@1106000043();
+    BEGIN
+      BEGIN
+            TablaFabricante.DELETEALL;
+            MDialog.OPEN('Ejercicio2 - FABRICANTES\Codigo: #1######\Nombre: #2######');
+            // INSERT DATOS EN TABLA FABRICANTE
+            TablaFabricante.CLAVE_FABRICANTE := 1;
+            TablaFabricante.NOMBRE := 'Kingston';
+            TablaFabricante.INSERT;
+            TablaFabricante.INIT;
+            MDialog.UPDATE(1,1);
+            MDialog.UPDATE(2,'Kingston');
+            SLEEP(2000);
+            TablaFabricante.CLAVE_FABRICANTE := 2;
+            TablaFabricante.NOMBRE := 'Adata';
+            TablaFabricante.INSERT;
+            TablaFabricante.INIT;
+            MDialog.UPDATE(1,2);
+            MDialog.UPDATE(2,'Adata');
+            SLEEP(2000);
+            TablaFabricante.CLAVE_FABRICANTE := 3;
+            TablaFabricante.NOMBRE := 'Logitech';
+            TablaFabricante.INSERT;
+            TablaFabricante.INIT;
+            MDialog.UPDATE(1,3);
+            MDialog.UPDATE(2,'Logitech');
+            SLEEP(2000);
+            TablaFabricante.CLAVE_FABRICANTE := 4;
+            TablaFabricante.NOMBRE := 'Lexar';
+            TablaFabricante.INSERT;
+            TablaFabricante.INIT;
+            MDialog.UPDATE(1,4);
+            MDialog.UPDATE(2,'Lexar');
+            SLEEP(2000);
+            TablaFabricante.CLAVE_FABRICANTE := 5;
+            TablaFabricante.NOMBRE := 'Seagate';
+            TablaFabricante.INSERT;
+            TablaFabricante.INIT;
+            MDialog.UPDATE(1,5);
+            MDialog.UPDATE(2,'Seagate');
+            SLEEP(2000);
+            MDialog.CLOSE;
+
+            TablaArticulos.DELETEALL;
+            MDialog.OPEN('Ejercicio2 - Articulos\Codigo: #1######\Nombre: #2######\Precio: #3######\Fabricante: #4######');
+            // INSERTAR DATOS EN TABLA ARTICULOS
+            TablaArticulos.CLAVE_ARTICULO := 1;
+            TablaArticulos.NOMBRE := 'Teclado';
+            TablaArticulos.PRECIO := 100;
+            TablaArticulos.FABRICANTE := 3;
+            TablaArticulos.INSERT;
+            TablaArticulos.INIT;
+            MDialog.UPDATE(1,1);
+            MDialog.UPDATE(2,'Teclado');
+            MDialog.UPDATE(3,100);
+            MDialog.UPDATE(4,3);
+            SLEEP(2000);
+            TablaArticulos.CLAVE_ARTICULO := 2;
+            TablaArticulos.NOMBRE := 'Disco duro 300 Gb';
+            TablaArticulos.PRECIO := 500;
+            TablaArticulos.FABRICANTE := 5;
+            TablaArticulos.INSERT;
+            TablaArticulos.INIT;
+            MDialog.UPDATE(1,2);
+            MDialog.UPDATE(2,'Disco duro 300 Gb');
+            MDialog.UPDATE(3,500);
+            MDialog.UPDATE(4,5);
+            SLEEP(2000);
+            TablaArticulos.CLAVE_ARTICULO := 3;
+            TablaArticulos.NOMBRE := 'Mouse';
+            TablaArticulos.PRECIO := 80;
+            TablaArticulos.FABRICANTE := 3;
+            TablaArticulos.INSERT;
+            TablaArticulos.INIT;
+            MDialog.UPDATE(1,3);
+            MDialog.UPDATE(2,'Mouse');
+            MDialog.UPDATE(3,80);
+            MDialog.UPDATE(4,3);
+            SLEEP(2000);
+            TablaArticulos.CLAVE_ARTICULO := 4;
+            TablaArticulos.NOMBRE := 'Memoria USB';
+            TablaArticulos.PRECIO := 140;
+            TablaArticulos.FABRICANTE := 4;
+            TablaArticulos.INSERT;
+            TablaArticulos.INIT;
+            MDialog.UPDATE(1,4);
+            MDialog.UPDATE(2,'Memoria USB');
+            MDialog.UPDATE(3,140);
+            MDialog.UPDATE(4,4);
+            SLEEP(2000);
+            TablaArticulos.CLAVE_ARTICULO := 5;
+            TablaArticulos.NOMBRE := 'Memoria RAM';
+            TablaArticulos.PRECIO := 290;
+            TablaArticulos.FABRICANTE := 1;
+            TablaArticulos.INSERT;
+            TablaArticulos.INIT;
+            MDialog.UPDATE(1,5);
+            MDialog.UPDATE(2,'Memoria RAM');
+            MDialog.UPDATE(3,290);
+            MDialog.UPDATE(4,1);
+            SLEEP(2000);
+            TablaArticulos.CLAVE_ARTICULO := 6;
+            TablaArticulos.NOMBRE := 'Disco duro extra}le 250 Gb';
+            TablaArticulos.PRECIO := 650;
+            TablaArticulos.FABRICANTE := 5;
+            TablaArticulos.INSERT;
+            TablaArticulos.INIT;
+            MDialog.UPDATE(1,6);
+            MDialog.UPDATE(2,'Disco duro extra}le 250 Gb');
+            MDialog.UPDATE(3,650);
+            MDialog.UPDATE(4,5);
+            SLEEP(2000);
+            TablaArticulos.CLAVE_ARTICULO := 7;
+            TablaArticulos.NOMBRE := 'Memoria USB';
+            TablaArticulos.PRECIO := 279;
+            TablaArticulos.FABRICANTE := 1;
+            TablaArticulos.INSERT;
+            TablaArticulos.INIT;
+            MDialog.UPDATE(1,7);
+            MDialog.UPDATE(2,'Memoria USB');
+            MDialog.UPDATE(3,279);
+            MDialog.UPDATE(4,1);
+            SLEEP(2000);
+            TablaArticulos.CLAVE_ARTICULO := 8;
+            TablaArticulos.NOMBRE := 'DVD Rom';
+            TablaArticulos.PRECIO := 450;
+            TablaArticulos.FABRICANTE := 2;
+            TablaArticulos.INSERT;
+            TablaArticulos.INIT;
+            MDialog.UPDATE(1,8);
+            MDialog.UPDATE(2,'DVD Rom');
+            MDialog.UPDATE(3,450);
+            MDialog.UPDATE(4,2);
+            SLEEP(2000);
+            TablaArticulos.CLAVE_ARTICULO := 9;
+            TablaArticulos.NOMBRE := 'CD Rom';
+            TablaArticulos.PRECIO := 200;
+            TablaArticulos.FABRICANTE := 2;
+            TablaArticulos.INSERT;
+            TablaArticulos.INIT;
+            MDialog.UPDATE(1,9);
+            MDialog.UPDATE(2,'CD Rom');
+            MDialog.UPDATE(3,200);
+            MDialog.UPDATE(4,2);
+            SLEEP(2000);
+            TablaArticulos.CLAVE_ARTICULO := 10;
+            TablaArticulos.NOMBRE := 'Tarjeta de red';
+            TablaArticulos.PRECIO := 180;
+            TablaArticulos.FABRICANTE := 3;
+            TablaArticulos.INSERT;
+            TablaArticulos.INIT;
+            MDialog.UPDATE(1,10);
+            MDialog.UPDATE(2,'Tarjeta de red');
+            MDialog.UPDATE(3,180);
+            MDialog.UPDATE(4,3);
+            SLEEP(2000);
+            MDialog.CLOSE;
+          END;
+    END;
+
+    BEGIN
+    END.
+  }
+}
+
