@@ -1,0 +1,52 @@
+OBJECT Page 50010 Pages_CARD_ARTICULOS_PT5
+{
+  OBJECT-PROPERTIES
+  {
+    Date=19/03/20;
+    Time=16:45:19;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table50011;
+    PageType=Card;
+    ActionList=ACTIONS
+    {
+      { 1106000008;  ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1106000006;1 ;Action    ;
+                      Name=Estadistica de ventas;
+                      RunObject=Report 112 }
+    }
+  }
+  CONTROLS
+  {
+    { 1106000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1106000001;1;Group  ;
+                Name=General;
+                GroupType=Group }
+
+    { 1106000002;2;Field  ;
+                SourceExpr=CLAVE_ARTICULO }
+
+    { 1106000003;2;Field  ;
+                SourceExpr=NOMBRE }
+
+    { 1106000004;2;Field  ;
+                SourceExpr=PRECIO }
+
+    { 1106000005;2;Field  ;
+                SourceExpr=FABRICANTE }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

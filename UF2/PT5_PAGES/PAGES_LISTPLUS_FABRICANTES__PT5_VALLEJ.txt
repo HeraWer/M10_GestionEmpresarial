@@ -1,0 +1,38 @@
+OBJECT Page 50025 PAGES_LISTPLUS_FABRICANTES_PT5
+{
+  OBJECT-PROPERTIES
+  {
+    Date=19/03/20;
+    Time=16:29:26;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table50010;
+    PageType=ListPlus;
+  }
+  CONTROLS
+  {
+    { 1106000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1106000001;1;Group  ;
+                Name=General;
+                GroupType=Group }
+
+    { 1106000002;2;Field  ;
+                SourceExpr=CLAVE_FABRICANTE }
+
+    { 1106000003;2;Field  ;
+                SourceExpr=NOMBRE }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

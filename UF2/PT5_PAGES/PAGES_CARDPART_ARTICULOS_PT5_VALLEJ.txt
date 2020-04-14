@@ -1,0 +1,40 @@
+OBJECT Page 50016 PAGES_CARDPART_ARTICULOS_PT5
+{
+  OBJECT-PROPERTIES
+  {
+    Date=19/03/20;
+    Time=16:15:43;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table50011;
+    PageType=CardPart;
+  }
+  CONTROLS
+  {
+    { 1106000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1106000001;1;Field  ;
+                SourceExpr=CLAVE_ARTICULO }
+
+    { 1106000002;1;Field  ;
+                SourceExpr=NOMBRE }
+
+    { 1106000003;1;Field  ;
+                SourceExpr=PRECIO }
+
+    { 1106000004;1;Field  ;
+                SourceExpr=FABRICANTE }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

@@ -1,0 +1,38 @@
+OBJECT Page 50019 PAGES_LISTPART_FABRICANTES_PT5
+{
+  OBJECT-PROPERTIES
+  {
+    Date=19/03/20;
+    Time=16:20:51;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table50010;
+    PageType=ListPart;
+  }
+  CONTROLS
+  {
+    { 1106000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1106000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1106000002;2;Field  ;
+                SourceExpr=CLAVE_FABRICANTE }
+
+    { 1106000003;2;Field  ;
+                SourceExpr=NOMBRE }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

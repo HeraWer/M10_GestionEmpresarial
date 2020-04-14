@@ -1,0 +1,27 @@
+OBJECT Page 50015 PAGES_ROLECENTER_FABRICANTE_PT
+{
+  OBJECT-PROPERTIES
+  {
+    Date=19/03/20;
+    Time=16:13:17;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    PageType=RoleCenter;
+  }
+  CONTROLS
+  {
+    { 1106000000;0;Container;
+                ContainerType=RoleCenterArea }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

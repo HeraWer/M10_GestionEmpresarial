@@ -1,0 +1,44 @@
+OBJECT Page 50012 PAGES_LIST_ARTICULOS_PT5
+{
+  OBJECT-PROPERTIES
+  {
+    Date=19/03/20;
+    Time=16:06:53;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table50011;
+    PageType=List;
+  }
+  CONTROLS
+  {
+    { 1106000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1106000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1106000002;2;Field  ;
+                SourceExpr=CLAVE_ARTICULO }
+
+    { 1106000003;2;Field  ;
+                SourceExpr=NOMBRE }
+
+    { 1106000004;2;Field  ;
+                SourceExpr=PRECIO }
+
+    { 1106000005;2;Field  ;
+                SourceExpr=FABRICANTE }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

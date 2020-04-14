@@ -1,0 +1,27 @@
+OBJECT Page 50014 PAGES_ROLECENTER_ARTICULO_PT5
+{
+  OBJECT-PROPERTIES
+  {
+    Date=19/03/20;
+    Time=16:12:08;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    PageType=RoleCenter;
+  }
+  CONTROLS
+  {
+    { 1106000000;0;Container;
+                ContainerType=RoleCenterArea }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+
